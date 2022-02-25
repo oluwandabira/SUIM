@@ -31,7 +31,7 @@ if not exists(ckpt_dir):
     os.makedirs(ckpt_dir)
 
 # initialize model
-suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=5)
+suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=8)
 model = suimnet.model
 print(model.summary())
 # load saved model
