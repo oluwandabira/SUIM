@@ -40,6 +40,8 @@ print(model.summary())
 
 batch_size = 8
 num_epochs = 50
+
+val_split = 0.2
 # setup data generator
 data_gen_args = dict(rotation_range=0.2,
                      width_shift_range=0.05,
@@ -62,8 +64,9 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(
 # data generator
 dataset = suim_dataset(train_dir, im_res_[:2])
 
+
 dataset = dataset.cache().batch(batch_size).prefetch(
-    buffer_size=tf.data.AUTOTUNE).repeat()
+    buffer_size=tf.data.AUTOTUNE)
 
 # data_augmentation = tf.keras.Sequential([
 #     layers.RandomFlip("horizontal_and_vertical"),
@@ -72,7 +75,7 @@ dataset = dataset.cache().batch(batch_size).prefetch(
 
 # fit model
 model.fit(dataset,
-          steps_per_epoch=5000,
           epochs=num_epochs,
           # verbose=2,
-          callbacks=[model_checkpoint, tensorboard_callback])
+          callbacks=[model_checkpoint, tensorboard_callback],
+          use_multiprocessing=True)
