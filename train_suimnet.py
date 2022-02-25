@@ -75,5 +75,4 @@ model.fit(dataset,
           steps_per_epoch=5000,
           epochs=num_epochs,
           verbose=2,
-          validation_split=0.2,
           callbacks=[model_checkpoint, tensorboard_callback])
