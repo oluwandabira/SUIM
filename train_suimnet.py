@@ -2,7 +2,6 @@
 # Training pipeline of the SUIM-Net
 # Paper: https://arxiv.org/pdf/2004.01241.pdf  
 """
-from __future__ import print_function, division
 import os
 import math
 from os.path import join, exists
@@ -12,6 +11,7 @@ from models.suim_net import SUIM_Net
 from utils.data import suim_dataset
 
 import tensorflow as tf
+from tensorflow.keras import layers
 
 # dataset directory
 dataset_name = "suim"
@@ -58,9 +58,13 @@ model_checkpoint = callbacks.ModelCheckpoint(model_ckpt_name,
 # data generator
 dataset = suim_dataset(train_dir, im_res_[:2])
 
-dataset = dataset.batch(batch_size)
+dataset = dataset.cache().batch(batch_size).prefetch(
+    buffer_size=tf.data.AUTOTUNE).repeat()
 
-dataset = dataset.cache().prefetch(buffer_size=tf.data.AUTOTUNE)
+# data_augmentation = tf.keras.Sequential([
+#     layers.RandomFlip("horizontal_and_vertical"),
+#     layers.RandomRotation(0.2)
+# ])
 
 # fit model
 model.fit(dataset,
