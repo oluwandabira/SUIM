@@ -3,16 +3,10 @@
     # for 5 object categories: HD, FV, RO, RI, WR 
 # Paper: https://arxiv.org/pdf/2004.01241.pdf  
 """
-#from __future__ import print_function, division
-import os
-import ntpath
 import numpy as np
-from PIL import Image
-from os.path import join, exists
 # local libs
 from models.suim_net import SUIM_Net
 from utils.data import suim_dataset
-from utils.data_utils import getPaths
 
 # experiment directories
 test_dir = "data/TEST/"
@@ -29,7 +23,7 @@ else:
 suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=5)
 model = suimnet.model
 print(model.summary())
-model.load_weights(join("ckpt/saved/", ckpt_name))
+model.load_weights("ckpt/saved/" + ckpt_name)
 
 
 # test images
