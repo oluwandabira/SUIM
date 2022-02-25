@@ -2,7 +2,7 @@
 # SUIM-Net model for underwater image segmentation
 # Paper: https://arxiv.org/pdf/2004.01241.pdf  
 """
-#import tensorflow as tf
+import tensorflow as tf
 from tensorflow.keras import Input
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import UpSampling2D, Conv2D
@@ -135,12 +135,12 @@ class SUIM_Net():
             self.model = self.get_model_RSB(n_classes)
             self.model.compile(optimizer=Adam(learning_rate=self.lr0),
                                loss='binary_crossentropy',
-                               metrics=['accuracy'])
+                               metrics=['accuracy', tf.keras.metrics.MeanIoU(num_classes=n_classes)])
         elif base == 'VGG':
             self.model = self.get_model_VGG16(n_classes)
             self.model.compile(optimizer=Adam(learning_rate=self.lr0),
                                loss='binary_crossentropy',
-                               metrics=['accuracy'])
+                               metrics=['accuracy', tf.keras.metrics.MeanIoU(num_classes=n_classes)])
 
     def get_model_RSB(self, n_classes):
         img_input, features = Suim_Encoder_RSB(self.inp_shape, channels=3)
