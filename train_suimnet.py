@@ -54,7 +54,7 @@ model_checkpoint = callbacks.ModelCheckpoint(model_ckpt_name,
                                              save_best_only=True)
 
 # data generator
-dataset = suim_dataset(train_dir, im_res_[:1])
+dataset = suim_dataset(train_dir, im_res_[:2])
 
 # fit model
 model.fit_generator(dataset,
