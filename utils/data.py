@@ -30,8 +30,8 @@ def list_categories(categories: np.ndarray) -> List[str]:
 
 def generate_images_masks(data_dir: str, img_size: Tuple[int, int]):
     path = Path(data_dir)
-    images = sorted(path.glob("images/*"))
-    masks = sorted(path.glob("masks/*"))
+    images = sorted([f for f in path.glob("images/*") if f.is_file()])
+    masks = sorted([f for f in path.glob("masks/*") if f.is_file()])
 
     for img_file, mask_file in zip(images, masks):
         img = cv2.imread(str(img_file))
