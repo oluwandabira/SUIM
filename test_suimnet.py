@@ -20,7 +20,7 @@ if base_ == 'RSB':
 else:
     im_res_ = (320, 256, 3)
     ckpt_name = "suimnet_vgg.hdf5"
-suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=5)
+suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=8)
 model = suimnet.model
 print(model.summary())
 model.load_weights("ckpt/saved/" + ckpt_name)
