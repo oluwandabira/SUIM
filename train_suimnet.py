@@ -11,6 +11,8 @@ from keras import callbacks
 from models.suim_net import SUIM_Net
 from utils.data import suim_dataset
 
+import tensorflow as tf
+
 # dataset directory
 dataset_name = "suim"
 train_dir = "data/train_val/"
@@ -56,8 +58,12 @@ model_checkpoint = callbacks.ModelCheckpoint(model_ckpt_name,
 # data generator
 dataset = suim_dataset(train_dir, im_res_[:2])
 
+dataset = dataset.batch(batch_size)
+
+dataset = dataset.cache().prefetch(buffer_size=tf.data.AUTOTUNE)
+
 # fit model
-model.fit_generator(dataset,
-                    steps_per_epoch=5000,
-                    epochs=num_epochs,
-                    callbacks=[model_checkpoint])
+model.fit(dataset,
+          steps_per_epoch=5000,
+          epochs=num_epochs,
+          callbacks=[model_checkpoint])
