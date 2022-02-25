@@ -23,7 +23,7 @@ else:
 suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=8)
 model = suimnet.model
 print(model.summary())
-model.load_weights("ckpt/saved/" + ckpt_name)
+model.load_weights("ckpt/" + ckpt_name)
 
 
 # test images
