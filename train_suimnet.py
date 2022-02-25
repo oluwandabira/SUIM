@@ -3,22 +3,22 @@
 # Paper: https://arxiv.org/pdf/2004.01241.pdf  
 """
 import os
-import math
+import datetime
 from os.path import join, exists
-from keras import callbacks
 # local libs
 from models.suim_net import SUIM_Net
 from utils.data import suim_dataset
 
 import tensorflow as tf
 from tensorflow.keras import layers
+import tensorboard
 
 # dataset directory
 dataset_name = "suim"
 train_dir = "data/train_val/"
 
 # ckpt directory
-ckpt_dir = "ckpt/"
+ckpt_dir = "ckpt/saved/"
 base_ = 'VGG'  # or 'RSB'
 if base_ == 'RSB':
     im_res_ = (320, 240, 3)
@@ -49,12 +49,16 @@ data_gen_args = dict(rotation_range=0.2,
                      horizontal_flip=True,
                      fill_mode='nearest')
 
-model_checkpoint = callbacks.ModelCheckpoint(model_ckpt_name,
-                                             monitor='loss',
-                                             verbose=1, mode='auto',
-                                             save_weights_only=True,
-                                             save_best_only=True)
+model_checkpoint = tf.keras.callbacks.ModelCheckpoint(model_ckpt_name,
+                                                      monitor='loss',
+                                                      verbose=1, mode='auto',
+                                                      save_weights_only=True,
+                                                      save_best_only=True)
 
+log_dir = "data/logs/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+tensorboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir=log_dir, histogram_freq=1)
 # data generator
 dataset = suim_dataset(train_dir, im_res_[:2])
 
@@ -70,4 +74,6 @@ dataset = dataset.cache().batch(batch_size).prefetch(
 model.fit(dataset,
           steps_per_epoch=5000,
           epochs=num_epochs,
-          callbacks=[model_checkpoint])
+          verbose=2,
+          validation_split=0.2,
+          callbacks=[model_checkpoint, tensorboard_callback])
