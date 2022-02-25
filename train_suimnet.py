@@ -74,5 +74,5 @@ dataset = dataset.cache().batch(batch_size).prefetch(
 model.fit(dataset,
           steps_per_epoch=5000,
           epochs=num_epochs,
-          verbose=2,
+          # verbose=2,
           callbacks=[model_checkpoint, tensorboard_callback])
