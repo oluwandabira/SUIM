@@ -16,10 +16,10 @@ test_dir = "data/TEST/"
 base_ = 'VGG'  # or 'RSB'
 if base_ == 'RSB':
     im_res_ = (320, 240, 3)
-    ckpt_name = "suimnet_rsb5.hdf5"
+    ckpt_name = "suimnet_rsb.hdf5"
 else:
     im_res_ = (320, 256, 3)
-    ckpt_name = "suimnet_vgg5.hdf5"
+    ckpt_name = "suimnet_vgg.hdf5"
 suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=5)
 model = suimnet.model
 print(model.summary())
