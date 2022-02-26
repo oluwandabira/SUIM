@@ -145,7 +145,7 @@ class SUIM_Net():
     def get_model_RSB(self, n_classes):
         img_input, features = Suim_Encoder_RSB(self.inp_shape, channels=3)
         out = Suim_Decoder_RSB(features, n_classes)
-        return Model(input=img_input, output=out)
+        return Model(img_input, out)
 
     def get_model_VGG16(self, n_classes):
         vgg = VGG16(input_shape=self.img_shape,
