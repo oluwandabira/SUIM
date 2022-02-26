@@ -1,8 +1,10 @@
-from typing import List, Tuple
+from typing import List, Tuple, Generator
 from pathlib import Path
+from cv2 import flip
 
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras import layers
 import cv2
 
 categories_code = [
@@ -28,10 +30,13 @@ def list_categories(categories: np.ndarray) -> List[str]:
     return [cat for code, cat in enumerate(categories_code) if (np.any(categories[:, :, code]))]
 
 
-def generate_images_masks(data_dir: str, img_size: Tuple[int, int]):
+def generate_images_masks(data_dir: str, img_size: Tuple[int, int]) -> Generator[Tuple[np.ndarray, np.ndarray], None, None]:
     path = Path(data_dir)
     images = sorted([f for f in path.glob("images/*") if f.is_file()])
     masks = sorted([f for f in path.glob("masks/*") if f.is_file()])
+
+    assert len(images) == len(
+        masks), "Unequal number of detected images and masks"
 
     for img_file, mask_file in zip(images, masks):
         img = cv2.imread(str(img_file))
@@ -44,6 +49,8 @@ def generate_images_masks(data_dir: str, img_size: Tuple[int, int]):
         mask = cv2.resize(mask, img_size)
 
         mask = mask / 255
+        mask[mask > 0.5] = 1
+        mask[mask <= 0.5] = 0
         yield img, get_categories(np.uint8(mask))
 
 
@@ -56,3 +63,20 @@ def suim_dataset(data_dir, img_size):
                 shape=(img_size[1], img_size[0], 3), dtype=tf.float32),
             tf.TensorSpec(shape=(img_size[1], img_size[0], 8), dtype=tf.uint8)
         ))
+
+
+def augment(flip_mode, rotation_range, seed=123):
+    return tf.keras.Sequential([
+        layers.RandomFlip(flip_mode, seed=seed),
+        layers.RandomRotation(rotation_range, seed=seed),
+    ])
+
+
+class Augment(layers.Layer):
+    def __init__(self, flip_mode="horizontal_and_vertical", rotation_range=0.02, seed=123, **kwargs):
+        super().__init__(**kwargs)
+        self.img_aug = augment(flip_mode, rotation_range, seed)
+        self.mask_aug = augment(flip_mode, rotation_range, seed)
+
+    def call(self, img, mask):
+        return self.img_aug(img), self.mask_aug(mask)

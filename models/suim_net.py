@@ -171,4 +171,4 @@ class SUIM_Net():
 
 if __name__ == "__main__":
     suim_net = SUIM_Net('VGG', im_res=(320, 256, 3))
-    #print (suim_net.model.summary())
+    print(suim_net.model.summary())
