@@ -6,4 +6,4 @@
 
 source .venv/bin/activate
 
-/usr/bin/time -v python train_suimnet.py
+/usr/bin/time -v python train_test.py
