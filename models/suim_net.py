@@ -139,7 +139,6 @@ class SUIM_Net():
         self.model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=self.lr0),
                            loss='binary_crossentropy',
                            metrics=[
-                               'accuracy',
                                # Can be enabled after https://github.com/tensorflow/addons/pull/2654
                                # tfa.metrics.F1Score(num_classes=n_classes),
                                tf.keras.metrics.MeanIoU(num_classes=n_classes)])
