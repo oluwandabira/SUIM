@@ -140,8 +140,9 @@ class SUIM_Net():
                            loss='binary_crossentropy',
                            metrics=[
                                'accuracy',
-                               tf.keras.metrics.MeanIoU(num_classes=n_classes),
-                               tfa.metrics.F1Score(num_classes=n_classes)])
+                               # Can be enabled after https://github.com/tensorflow/addons/pull/2654
+                               # tfa.metrics.F1Score(num_classes=n_classes),
+                               tf.keras.metrics.MeanIoU(num_classes=n_classes)])
 
     def get_model_RSB(self, n_classes):
         img_input, features = Suim_Encoder_RSB(self.inp_shape, channels=3)
