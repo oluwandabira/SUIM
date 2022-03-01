@@ -3,13 +3,14 @@
 # Paper: https://arxiv.org/pdf/2004.01241.pdf  
 """
 import tensorflow as tf
-from tensorflow.keras import Input
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import UpSampling2D, Conv2D
-from tensorflow.keras.layers import BatchNormalization, Activation, MaxPooling2D
-from tensorflow.keras.layers import add, Lambda, Concatenate, ZeroPadding2D
-from tensorflow.keras.optimizers import Adam, SGD
-from tensorflow.keras.applications.vgg16 import VGG16
+import tensorflow_addons as tfa
+from keras import Input
+from keras.models import Model
+from keras.layers import UpSampling2D, Conv2D
+from keras.layers import BatchNormalization, Activation, MaxPooling2D
+from keras.layers import add, Lambda, Concatenate, ZeroPadding2D
+# from keras.optimizers import Adam
+from keras.applications.vgg16 import VGG16
 
 
 def RSB(input_tensor, kernel_size, filters, strides=1, skip=True):
@@ -133,14 +134,14 @@ class SUIM_Net():
         self.img_shape = (im_res[1], im_res[0], 3)
         if base == 'RSB':
             self.model = self.get_model_RSB(n_classes)
-            self.model.compile(optimizer=Adam(learning_rate=self.lr0),
-                               loss='binary_crossentropy',
-                               metrics=['accuracy', tf.keras.metrics.MeanIoU(num_classes=n_classes)])
         elif base == 'VGG':
             self.model = self.get_model_VGG16(n_classes)
-            self.model.compile(optimizer=Adam(learning_rate=self.lr0),
-                               loss='binary_crossentropy',
-                               metrics=['accuracy', tf.keras.metrics.MeanIoU(num_classes=n_classes)])
+        self.model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=self.lr0),
+                           loss='binary_crossentropy',
+                           metrics=[
+                               'accuracy',
+                               tf.keras.metrics.MeanIoU(num_classes=n_classes),
+                               tfa.metrics.F1Score(num_classes=n_classes)])
 
     def get_model_RSB(self, n_classes):
         img_input, features = Suim_Encoder_RSB(self.inp_shape, channels=3)

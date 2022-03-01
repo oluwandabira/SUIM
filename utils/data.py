@@ -4,7 +4,7 @@ from cv2 import flip
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers
+from keras import layers
 import cv2
 
 categories_code = [
@@ -13,7 +13,7 @@ categories_code = [
 ]
 
 
-def get_categories(mask: np.ndarray) -> np.ndarray:
+def split_categories(mask: np.ndarray) -> np.ndarray:
     imw, imh = mask.shape[0], mask.shape[1]
 
     categories = np.zeros((imw, imh, 8))
@@ -24,6 +24,36 @@ def get_categories(mask: np.ndarray) -> np.ndarray:
             categories[i, j, code] = 1
 
     return categories
+
+
+rgbarray = np.array([
+    0, 0, 0,
+    0, 0, 1,
+    0, 1, 0,
+    0, 1, 1,
+    1, 0, 0,
+    1, 0, 1,
+    1, 1, 0,
+    1, 1, 1
+]).reshape((8, 3))
+
+
+def join_categories(masks: np.ndarray) -> np.ndarray:
+    imw, imh = masks.shape[0], masks.shape[1]
+
+    mask = np.zeros((imw, imh, 3), dtype=np.uint8)
+
+    for i in range(imw):
+        for j in range(imh):
+            # for c in range(masks.shape[2]):
+            #     if masks[i, j, c]:
+            #         mask[i, j] = rgbarray[c]
+            #         break
+            amax = masks[i, j].argmax()
+            idx = amax if amax.shape == () else amax[0]
+            mask[i, j] = rgbarray[idx]
+
+    return mask
 
 
 def list_categories(categories: np.ndarray) -> List[str]:
@@ -51,7 +81,7 @@ def generate_images_masks(data_dir: str, img_size: Tuple[int, int]) -> Generator
         mask = mask / 255
         mask[mask > 0.5] = 1
         mask[mask <= 0.5] = 0
-        yield img, get_categories(np.uint8(mask))
+        yield img, split_categories(np.uint8(mask))
 
 
 def suim_dataset(data_dir, img_size):
@@ -78,5 +108,5 @@ class Augment(layers.Layer):
         self.img_aug = augment(flip_mode, rotation_range, seed)
         self.mask_aug = augment(flip_mode, rotation_range, seed)
 
-    def call(self, img, mask):
-        return self.img_aug(img), self.mask_aug(mask)
+    def call(self, img, img_mask):
+        return self.img_aug(img), self.mask_aug(img_mask)

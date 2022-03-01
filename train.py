@@ -10,15 +10,13 @@ from models.suim_net import SUIM_Net
 from utils.data import suim_dataset, Augment
 
 import tensorflow as tf
-from tensorflow.keras import layers
+from keras import layers
 
-from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
+from keras.callbacks import ModelCheckpoint, TensorBoard
 import tensorboard
 
 # dataset directory
-dataset_name = "suim"
 train_dir = "data/train_val/"
-test_dir = "data/TEST/"
 
 # ckpt directory
 ckpt_dir = "ckpt/saved/"
@@ -68,10 +66,3 @@ model.fit(dataset,
           verbose=2,
           callbacks=[model_checkpoint, tensorboard_callback],
           )
-
-
-# test images
-test_dataset = suim_dataset(test_dir, im_res_[:2])
-
-model.evaluate(dataset.cache().batch(8).prefetch(
-    buffer_size=tf.data.AUTOTUNE))
