@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser("Run inference on a video")
 
 parser.add_argument("input")
 parser.add_argument("out")
-parser.add_argument("--threshold", type=float, default=0.5)
+parser.add_argument("-t", "--threshold", type=float, default=0.5)
 
 args = parser.parse_args()
 
