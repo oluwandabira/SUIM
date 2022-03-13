@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --gres mps:100
-#SBATCH --cpus-per-task 8
-#SBATCH --mem 40
-#SBATCH --job-name "Infer Vid"
+#SBATCH --gres mps:20
+#SBATCH --cpus-per-task 4
+#SBATCH --mem 4G
+#SBATCH --job-name "InferVid"
 
 source .venv/bin/activate
 

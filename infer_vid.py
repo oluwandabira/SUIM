@@ -17,8 +17,11 @@ parser = argparse.ArgumentParser("Run inference on a video")
 
 parser.add_argument("input")
 parser.add_argument("out")
+parser.add_argument("--threshold", type=float, default=0.5)
 
 args = parser.parse_args()
+
+thres = args.threshold
 
 # input/output shapes
 base_ = 'VGG'  # or 'RSB'
@@ -69,8 +72,8 @@ while vid.isOpened():
     toc = time.perf_counter_ns()
     tic_tocs[count] = toc - tic
     img = np.squeeze(predicted).copy()
-    img[img > 0.5] = 1
-    img[img <= 0.5] = 0
+    img[img > thres] = 1
+    img[img <= thres] = 0
     resized = cv2.resize(img * 255, frame_size)
     for i in range(8):
         #cv2.imwrite(f"{out_folder}/{i}/{count}.jpg", resized[:, :, i])
