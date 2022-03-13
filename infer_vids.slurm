@@ -8,10 +8,10 @@
 readarray -t files < $1
 
 video=${files[$SLURM_ARRAY_TASK_ID]}
-outfolder=$(basename $video .AVI)
+outfolder=$(basename "$video" .AVI)
 
 mkdir output
 
 source .venv/bin/activate
 
-/usr/bin/time -v python infer_vid.py $video output/$outfolder
+/usr/bin/time -v python infer_vid.py "$video" "output/$outfolder"
