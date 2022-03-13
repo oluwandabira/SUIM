@@ -32,7 +32,7 @@ model.load_weights(join("ckpt/", ckpt_name))
 
 im_h, im_w = im_res_[1], im_res_[0]
 
-vid = cv2.VideoCapture("vid.AVI")
+#vid = cv2.VideoCapture("vid.AVI")
 vid = cv2.VideoCapture(args.input)
 
 frame_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
