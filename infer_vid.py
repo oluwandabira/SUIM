@@ -90,7 +90,7 @@ while vid.isOpened():
 # cv2.destroyAllWindows()
 
 avg_time = np.average(tic_tocs) * 1e-9
-print(f"Average frame time is {avg_time:0.2}s ({avg_time / 60:0.2} fps)")
+print(f"Average frame time is {avg_time:0.2}s ({1/avg_time:0.2} fps)")
 vid.release()
 
 for i in range(8):
