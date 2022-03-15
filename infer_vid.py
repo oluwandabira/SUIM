@@ -77,16 +77,16 @@ while vid.isOpened():
     resized = cv2.resize(masks, frame_size)
     for i in range(8):
         #cv2.imwrite(f"{out_folder}/{i}/{count}.jpg", resized[:, :, i])
-        outputs[i].write(np.uint8(cv2.cvtColor(
-            resized[:, :, i], cv2.COLOR_GRAY2BGR)))
-        # ii = resized[:, :, i]
-        # x = ii[:, :, np.newaxis]
-        # x = np.pad(
-        #     x, ((0, 0), (0, 0), (1, 1)), constant_values=0)
-        # x = np.uint8(x)
-        # #print(f"orig: {orig.shape}, x: {x.shape}")
-        # img = cv2.addWeighted(orig, 1.0, x, 0.5, 0.0)
-        # outputs[i].write(orig)
+        # outputs[i].write(np.uint8(cv2.cvtColor(
+        #     resized[:, :, i], cv2.COLOR_GRAY2BGR)))
+        ii = resized[:, :, i]
+        x = ii[:, :, np.newaxis]
+        x = np.pad(
+            x, ((0, 0), (0, 0), (1, 1)), constant_values=0)
+        x = np.uint8(x)
+        #print(f"orig: {orig.shape}, x: {x.shape}")
+        img = cv2.addWeighted(orig, 1.0, x, 0.5, 0.0)
+        outputs[i].write(orig)
     #img = join_categories(img)
     # output.write(resized)
     count = count + 1
@@ -98,7 +98,7 @@ while vid.isOpened():
 # cv2.destroyAllWindows()
 
 avg_time = np.average(tic_tocs) * 1e-9
-print(f"Average frame time is {avg_time:0.2}s ({1/avg_time:0.2} fps)")
+print(f"Average frame time is {avg_time:0.2}s ({1/avg_time:0.4} fps)")
 vid.release()
 
 for i in range(8):
