@@ -85,7 +85,7 @@ while vid.isOpened():
         x = np.uint8(x)
         #print(f"orig: {orig.shape}, x: {x.shape}")
         img = cv2.addWeighted(orig, 1.0, x, 0.5, 0.0)
-        outputs[i].write(img)
+        outputs[i].write(orig)
     #img = join_categories(img)
     # output.write(resized)
     count = count + 1
