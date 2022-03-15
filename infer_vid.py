@@ -77,7 +77,8 @@ while vid.isOpened():
     resized = cv2.resize(masks, frame_size)
     for i in range(8):
         #cv2.imwrite(f"{out_folder}/{i}/{count}.jpg", resized[:, :, i])
-        outputs[i].write(cv2.cvtColor(resized[:, :, i], cv2.COLOR_GRAY2BGR))
+        outputs[i].write(np.uint8(cv2.cvtColor(
+            resized[:, :, i], cv2.COLOR_GRAY2BGR)))
         # ii = resized[:, :, i]
         # x = ii[:, :, np.newaxis]
         # x = np.pad(
