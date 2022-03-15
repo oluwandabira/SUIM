@@ -71,14 +71,21 @@ while vid.isOpened():
     predicted = model(frame)
     toc = time.perf_counter_ns()
     tic_tocs[count] = toc - tic
-    img = np.squeeze(predicted).copy()
-    img[img > thres] = 1
-    img[img <= thres] = 0
-    resized = cv2.resize(img * 255, frame_size)
+    masks = np.squeeze(predicted).copy()
+    masks[masks > thres] = 255
+    masks[masks <= thres] = 0
+    resized = cv2.resize(masks, frame_size)
     for i in range(8):
         #cv2.imwrite(f"{out_folder}/{i}/{count}.jpg", resized[:, :, i])
         #outputs[i].write(cv2.cvtColor(resized[:, :, i], cv2.COLOR_GRAY2BGR))
-        outputs[i].write(np.uint8(resized[:, :, i]))
+        ii = resized[:, :, i]
+        x = ii[:, :, np.newaxis]
+        x = np.pad(
+            x, ((0, 0), (0, 0), (1, 1)), constant_values=0)
+        x = np.uint8(x)
+        #print(f"orig: {orig.shape}, x: {x.shape}")
+        img = cv2.addWeighted(orig, 1.0, x, 0.5, 0.0)
+        outputs[i].write(img)
     #img = join_categories(img)
     # output.write(resized)
     count = count + 1
