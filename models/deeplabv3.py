@@ -40,7 +40,6 @@ from keras.layers import GlobalAveragePooling2D
 from keras.layers import GlobalMaxPooling2D
 from keras.layers import AveragePooling2D
 #from keras.engine import Layer
-from keras.engine import InputSpec
 #from keras.engine.topology import get_source_inputs
 from keras import backend as K
 from keras.applications import imagenet_utils
@@ -66,7 +65,7 @@ class BilinearUpsampling(layers.Layer):
         super(BilinearUpsampling, self).__init__(**kwargs)
 
         self.data_format = K.normalize_data_format(data_format)
-        self.input_spec = InputSpec(ndim=4)
+        self.input_spec = layers.InputSpec(ndim=4)
         if output_size:
             self.upsample_size = conv_utils.normalize_tuple(
                 output_size, 2, 'size')
