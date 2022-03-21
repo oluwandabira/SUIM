@@ -21,6 +21,7 @@ import os
 import warnings
 import numpy as np
 
+import keras
 from keras.models import Model
 from keras import layers
 from keras.layers import Input
@@ -38,14 +39,13 @@ from keras.layers import ZeroPadding2D
 from keras.layers import GlobalAveragePooling2D
 from keras.layers import GlobalMaxPooling2D
 from keras.layers import AveragePooling2D
-from keras.engine import Layer
+#from keras.engine import Layer
 from keras.engine import InputSpec
 #from keras.engine.topology import get_source_inputs
 from keras import backend as K
 from keras.applications import imagenet_utils
 from keras.utils import conv_utils
 from keras.utils.data_utils import get_file
-from keras.optimizers import *
 
 
 TF_WEIGHTS_PATH = "https://github.com/bonlime/keras-deeplab-v3-plus/releases/download/1.0/deeplabv3_weights_tf_dim_ordering_tf_kernels.h5"
@@ -54,7 +54,7 @@ TF_WEIGHTS_PATH = "https://github.com/bonlime/keras-deeplab-v3-plus/releases/dow
 '''
 
 
-class BilinearUpsampling(Layer):
+class BilinearUpsampling(layers.Layer):
     """Just a simple bilinear upsampling layer. Works only with TF.
        Args:
            upsampling: tuple of 2 numbers > 0. The upsampling ratio for h and w
@@ -378,7 +378,7 @@ def Deeplabv3(weights='pascal_voc', input_tensor=None, input_shape=(512, 512, 3)
     #     inputs = img_input
 
     model = Model(img_input, out)
-    model.compile(optimizer=Adam(lr=1e-4),
+    model.compile(optimizer=keras.optimizers.Adam(lr=1e-4),
                   loss='binary_crossentropy',
                   metrics=['accuracy'])
 
