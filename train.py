@@ -13,27 +13,15 @@ import tensorflow as tf
 from keras import layers
 
 from keras.callbacks import ModelCheckpoint, TensorBoard
-import tensorboard
+from models.picker import pick
 
 # dataset directory
 train_dir = "data/train_val/"
 
 # ckpt directory
 ckpt_dir = "ckpt/saved/"
-base_ = 'RSB'  # or 'VGG'
-if base_ == 'RSB':
-    im_res_ = (320, 240, 3)
-    ckpt_name = "suimnet_rsb.hdf5"
-else:
-    im_res_ = (320, 256, 3)
-    ckpt_name = "suimnet_vgg.hdf5"
-model_ckpt_name = join(ckpt_dir, ckpt_name)
-if not exists(ckpt_dir):
-    os.makedirs(ckpt_dir)
 
-# initialize model
-suimnet = SUIM_Net(base=base_, im_res=im_res_, n_classes=8)
-model = suimnet.model
+model, im_res, ckpt_name = pick("deeplabv3")
 
 batch_size = 8
 num_epochs = 50
@@ -41,14 +29,14 @@ val_split = 0.2
 
 
 # data generator
-dataset = suim_dataset(train_dir, im_res_[:2])
+dataset = suim_dataset(train_dir, im_res[:2])
 
 
 dataset = dataset.cache().batch(batch_size).repeat().map(Augment()).prefetch(
     buffer_size=tf.data.AUTOTUNE)
 
 
-model_checkpoint = ModelCheckpoint(model_ckpt_name,
+model_checkpoint = ModelCheckpoint(ckpt_name,
                                    monitor='loss',
                                    verbose=1, mode='auto',
                                    save_weights_only=True,

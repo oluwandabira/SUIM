@@ -40,7 +40,7 @@ from keras.layers import GlobalMaxPooling2D
 from keras.layers import AveragePooling2D
 from keras.engine import Layer
 from keras.engine import InputSpec
-from keras.engine.topology import get_source_inputs
+#from keras.engine.topology import get_source_inputs
 from keras import backend as K
 from keras.applications import imagenet_utils
 from keras.utils import conv_utils
@@ -52,6 +52,7 @@ TF_WEIGHTS_PATH = "https://github.com/bonlime/keras-deeplab-v3-plus/releases/dow
 
 '''from https://github.com/MLearing/Keras-Deeplab-v3-plus
 '''
+
 
 class BilinearUpsampling(Layer):
     """Just a simple bilinear upsampling layer. Works only with TF.
@@ -367,7 +368,7 @@ def Deeplabv3(weights='pascal_voc', input_tensor=None, input_shape=(512, 512, 3)
     #               loss='binary_crossentropy',
     #               metrics=['accuracy'])
 
-    #try output layer
+    # try output layer
 
     # Ensure that the model takes into account
     # any potential predecessors of `input_tensor`.

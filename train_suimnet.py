@@ -10,18 +10,16 @@ from models.suim_net import SUIM_Net
 from utils.data import suim_dataset, Augment
 
 import tensorflow as tf
-from tensorflow.keras import layers
+from keras import layers
 
-from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
-import tensorboard
+from keras.callbacks import ModelCheckpoint, TensorBoard
 
 # dataset directory
-dataset_name = "suim"
 train_dir = "data/train_val/"
 
 # ckpt directory
 ckpt_dir = "ckpt/saved/"
-base_ = 'VGG'  # or 'RSB'
+base_ = 'RSB'  # or 'VGG'
 if base_ == 'RSB':
     im_res_ = (320, 240, 3)
     ckpt_name = "suimnet_rsb.hdf5"
